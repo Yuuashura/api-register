@@ -96,6 +96,7 @@
             padding: 0.75rem;
             border-radius: 5px;
             text-align: center;
+            display: none;
         }
 
         .message.success {
@@ -145,115 +146,102 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-    </style>
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Daftar Akun</h1>
-            <p>Buat akun baru untuk memulai</p>
-        </div>
-
-        <form id="registerForm">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-
-            <button type="submit" class="btn" id="submitBtn">Daftar</button>
-        </form>
-
-        <div id="loading" class="loading">
-            <div class="spinner"></div>
-            <p>Mendaftarkan akun...</p>
-        </div>
-
-        <div id="message" class="message" style="display: none;"></div>
-
-        <div class="links">
-            <a href="login.html">Sudah punya akun? Login</a>
-            <a href="users.html">Lihat Semua User</a>
-        </div>
+  <div class="container">
+    <div class="header">
+      <h1>Daftar Akun</h1>
+      <p>Buat akun baru untuk memulai</p>
     </div>
 
-    <script>
-        const API_BASE_URL = window.location.origin;
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
 
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const loading = document.getElementById('loading');
-            const message = document.getElementById('message');
-            
-            // Get form data
-            const formData = new FormData(this);
-            const data = {
-                username: formData.get('username'),
-                email: formData.get('email'),
-                password: formData.get('password')
-            };
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
 
-            // Show loading
-            submitBtn.disabled = true;
-            loading.style.display = 'block';
-            message.style.display = 'none';
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
 
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/register`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
+      <button type="submit" class="btn" id="submitBtn">Daftar</button>
+    </form>
 
-                const result = await response.json();
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Mendaftarkan akun...</p>
+    </div>
 
-                // Hide loading
-                loading.style.display = 'none';
-                submitBtn.disabled = false;
+    <div id="message" class="message"></div>
 
-                // Show message
-                message.style.display = 'block';
-                
-                if (response.ok && result.success) {
-                    message.className = 'message success';
-                    message.textContent = result.message + ' Akun berhasil dibuat!';
-                    
-                    // Reset form
-                    this.reset();
-                    
-                    // Redirect ke login setelah 2 detik
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 2000);
-                } else {
-                    message.className = 'message error';
-                    message.textContent = result.message || 'Terjadi kesalahan saat mendaftar';
-                }
-            } catch (error) {
-                // Hide loading
-                loading.style.display = 'none';
-                submitBtn.disabled = false;
-                
-                // Show error message
-                message.style.display = 'block';
-                message.className = 'message error';
-                message.textContent = 'Terjadi kesalahan koneksi. Silakan coba lagi.';
-                console.error('Error:', error);
-            }
+    <div class="links">
+      <a href="login.html">Sudah punya akun? Login</a>
+      <a href="users.html">Lihat Semua User</a>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'https://yuu-api-regist.vercel.app'; // ← ini link vercel kamu
+
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('submitBtn');
+      const loading = document.getElementById('loading');
+      const message = document.getElementById('message');
+
+      const formData = new FormData(this);
+      const data = {
+        username: formData.get('username'),
+        email: formData.get('email'),
+        password: formData.get('password')
+      };
+
+      submitBtn.disabled = true;
+      loading.style.display = 'block';
+      message.style.display = 'none';
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
         });
-    </script>
+
+        const result = await response.json();
+        console.log(result);
+
+        loading.style.display = 'none';
+        submitBtn.disabled = false;
+        message.style.display = 'block';
+
+        if (response.ok && result.success) {
+          message.className = 'message success';
+          message.textContent = result.message || 'Akun berhasil dibuat!';
+          this.reset();
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 2000);
+        } else {
+          message.className = 'message error';
+          message.textContent = result.message || 'Terjadi kesalahan saat mendaftar';
+        }
+      } catch (error) {
+        loading.style.display = 'none';
+        submitBtn.disabled = false;
+        message.style.display = 'block';
+        message.className = 'message error';
+        message.textContent = 'Terjadi kesalahan koneksi. Silakan coba lagi.';
+        console.error('Error:', error);
+      }
+    });
+  </script>
 </body>
 </html>

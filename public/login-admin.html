@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <div class="login-container">
+    <h2>Admin Login</h2>
+    <form id="adminLoginForm">
+      <input type="text" placeholder="Username atau Email" id="identifier" required />
+      <input type="password" placeholder="Password" id="password" required />
+      <button type="submit">Login</button>
+    </form>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    document.getElementById('adminLoginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const identifier = document.getElementById('identifier').value;
+      const password = document.getElementById('password').value;
+
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ identifier, password })
+      });
+
+      const result = await res.json();
+      const messageDiv = document.getElementById('message');
+
+      if (result.success && result.data.user.isAdmin) {
+        localStorage.setItem('token', result.data.token);
+        window.location.href = 'admin.html';
+      } else {
+        messageDiv.innerText = result.message || 'Gagal login';
+      }
+    });
+  </script>
+</body>
+</html>

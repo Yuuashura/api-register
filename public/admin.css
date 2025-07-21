@@ -1,0 +1,68 @@
+/* public/admin.css */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+.login-container {
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  width: 320px;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.login-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.login-container h2 {
+  margin-bottom: 20px;
+  color: #333333;
+}
+
+.login-container input {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.login-container input:focus {
+  border-color: #4facfe;
+  box-shadow: 0 0 5px rgba(79, 172, 254, 0.3);
+}
+
+.login-container button {
+  background: #4facfe;
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s ease-in-out;
+}
+
+.login-container button:hover {
+  background: #2f80ed;
+}
+
+#message {
+  margin-top: 15px;
+  color: red;
+  font-size: 14px;
+}

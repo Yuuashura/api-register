@@ -181,6 +181,53 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Middleware autentikasi JWT
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: 'Token tidak ditemukan'
+    });
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({
+        success: false,
+        message: 'Token tidak valid'
+      });
+    }
+
+    req.user = user; // simpan data user ke dalam req
+    next();
+  });
+};
+
+
+// DELETE /api/users/:id - Menghapus user berdasarkan ID
+app.delete('/api/users/:id', (req, res) => {
+  const userId = parseInt(req.params.id);
+
+  const userIndex = users.findIndex(u => u.id === userId);
+  if (userIndex === -1) {
+    return res.status(404).json({
+      success: false,
+      message: 'User tidak ditemukan'
+    });
+  }
+
+  users.splice(userIndex, 1);
+
+  res.status(200).json({
+    success: true,
+    message: 'User berhasil dihapus'
+  });
+});
+
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server berjalan di port ${PORT}`);
