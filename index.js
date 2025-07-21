@@ -23,6 +23,12 @@ const findUser = (identifier) => {
   );
 };
 
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/register.html');
+});
+
+
 // POST /api/register
 app.post('/api/register', async (req, res) => {
   try {
